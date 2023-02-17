@@ -25,21 +25,21 @@ devtools::install_github("amanigaultw/ddbar")
 library(ddbar)
 
 data = list(list(dataGroupId = "1",
-                 data = list(c("1_1", 5, "1_1"),
-                             c("1_2", 2, "1_2"))),
-            list(dataGroupId = "1_1",
-                 data = list(c("1_1_1", 6, "1_1_1"),
-                             c("1_1_2", 8, "1_1_2"))),
-            list(dataGroupId = "1_2",
-                 data = list(c("1_2_1", 1),
-                             c("1_2_2", 3))),
-            list(dataGroupId = "1_1_1",
-                 data = list(c("1_1_1_1", 10),
-                             c("1_1_1_2", 9))),
-            list(dataGroupId = "1_1_2",
-                 data = list(c("1_1_2_1", 12),
-                             c("1_1_2_2", 7)))
-       )
+                 data = list(c("animals", 5, "animals"),
+                             c("fruits", 2, "fruits"))),
+            list(dataGroupId = "animals",
+                 data = list(c("cats", 6, "cats"),
+                             c("dogs", 8, "dogs"))),
+            list(dataGroupId = "fruits",
+                 data = list(c("apples", 1),
+                             c("oranges", 3))),
+            list(dataGroupId = "cats",
+                 data = list(c("calico cats", 10),
+                             c("american short hair cats", 9))),
+            list(dataGroupId = "dogs",
+                 data = list(c("pugs", 12),
+                             c("german shepherds", 7)))
+		)
 
 ddbar(data)
 
