@@ -21,6 +21,8 @@ devtools::install_github("amanigaultw/ddbar")
 
 ## Example
 
+Illustrating ddbar() using some dummy data.
+
 ``` r
 library(ddbar)
 
