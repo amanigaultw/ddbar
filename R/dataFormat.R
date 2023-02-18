@@ -12,6 +12,12 @@
 #' formattedData <- dataFormat(rawdata)
 #'
 dataFormat <- function(data){
+
+  if(any(is.na(data))){
+    data[is.na(data)] <- "missing"
+    warning("missing values were recoded before plotting")
+  }
+
   dataList <- getDataList(data)
   lapply(dataList[!unlist(lapply(dataList, isTerminal))], toeChartListFormat)
 }

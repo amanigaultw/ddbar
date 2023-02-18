@@ -1,27 +1,20 @@
 #' Drill Down Bar Apache echarts Widget
 #'
-#' <Add Description>
+#' @param data
+#' @param width
+#' @param height
+#' @param elementId
 #'
 #' @import htmlwidgets
 #'
 #' @examples
 #'
-#' data = list(list(dataGroupId = "1",
-#'                  data = list(c("1_1", 5, "1_1"),
-#'                              c("1_2", 2, "1_2"))),
-#'             list(dataGroupId = "1_1",
-#'                  data = list(c("1_1_1", 6, "1_1_1"),
-#'                              c("1_1_2", 8, "1_1_2"))),
-#'             list(dataGroupId = "1_2",
-#'                  data = list(c("1_2_1", 1),
-#'                              c("1_2_2", 3))),
-#'             list(dataGroupId = "1_1_1",
-#'                  data = list(c("1_1_1_1", 10),
-#'                              c("1_1_1_2", 9))),
-#'             list(dataGroupId = "1_1_2",
-#'                  data = list(c("1_1_2_1", 12),
-#'                              c("1_1_2_2", 7)))
-#'        )
+#' data <- data.frame(nationality = sample(c("French", "German", "British"), 1000, replace=TRUE, prob=c(0.4, 0.3, 0.3)),
+#'                    sex = sample(c("Male", "Female"), 1000, replace=TRUE, prob=c(0.5, 0.5)),
+#'                    age = sample(c("child", "adult", "older adult"), 1000, replace=TRUE, prob=c(0.1, 0.7, 0.2)),
+#'                    language = sample(c("unilingual", "bilingual"), 1000, replace=TRUE, prob=c(0.7, 0.3)),
+#'                    TV = sample(c("less than 2h TV / day", "more than 2h TV / day"), 1000, replace=TRUE, prob=c(0.7, 0.3)),
+#'                    politics = sample(c("left", "center", "right"), 1000, replace=TRUE, prob=c(0.3, 0.4, 0.3)))
 #'
 #' ddbar(data)
 #'
