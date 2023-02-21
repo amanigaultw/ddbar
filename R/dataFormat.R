@@ -1,4 +1,4 @@
-#' Format dataframe for use by ddbar
+#' Format a given dataframe for use by ddbar
 #'
 #' @param data
 #'
@@ -18,10 +18,14 @@
 #'
 dataFormat <- function(data, FUN = NULL){
 
-  if(any(is.na(data))){
-    data[is.na(data)] <- "missing"
-    warning("missing values were recoded before plotting")
+  if(any(is.na(data[, !sapply(data, is.numeric)]))){
+    initialRowCount <- nrow(data)
+    data <- data[rowSums(is.na(data[, !sapply(data, is.numeric)])) == 0,]
+
+    warning(paste(initialRowCount - nrow(data), "rows were dropped due to missing values."))
   }
+
+  stopifnot("Too much missing data to generate a valid drill down plot" = nrow(data) > 0)
 
   dataList <- getDataList(data)
   lapply(dataList[!unlist(lapply(dataList, isTerminal))], toeChartListFormat, FUN)
