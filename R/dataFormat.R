@@ -47,7 +47,7 @@ isTerminal <- function(data){
 
 getDataGroupId <- function(data){
   if (isTerminal(data)) return(NULL)
-  if(firstNonUniqueCol(data) == 1) return("1")
+  if(firstNonUniqueCol(data) == 1) return(" ")
   return(paste0(apply(as.data.frame(data[,1:(firstNonUniqueCol(data)-1)]), 2, function(x) unique(x)), collapse = "-"))
 }
 

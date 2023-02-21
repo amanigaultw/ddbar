@@ -46,6 +46,14 @@ HTMLWidgets.widget({
             divideShape: 'clone'
           }
         },
+        title: {
+          text: dataGroupId,
+          left: "center",
+          top: "top",
+          textStyle: {
+            fontSize: 20
+          }
+        },
         graphic: [
           {
             type: 'text',
@@ -83,6 +91,14 @@ HTMLWidgets.widget({
           universalTransition: {
             enabled: true,
             divideShape: 'clone'
+          }
+        },
+        title: {
+          text: dataGroupId,
+          left: "center",
+          top: "top",
+          textStyle: {
+            fontSize: 20
           }
         },
         graphic: [
@@ -126,7 +142,7 @@ HTMLWidgets.widget({
       }
     };
 
-    option = allOptionsWithItemGroupId['1']; // The initial option is the root data option
+    option = allOptionsWithItemGroupId[' ']; // The initial option is the root data option
 
     myChart.on('click', 'series.bar', (params) => {
       if (params.data[2]) {
