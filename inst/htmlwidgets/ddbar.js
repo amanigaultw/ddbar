@@ -49,7 +49,7 @@ HTMLWidgets.widget({
         title: {
           text: dataGroupId,
           left: "center",
-          top: "top",
+          top: "bottom",
           textStyle: {
             fontSize: 20
           }
@@ -96,7 +96,7 @@ HTMLWidgets.widget({
         title: {
           text: dataGroupId,
           left: "center",
-          top: "top",
+          top: "bottom",
           textStyle: {
             fontSize: 20
           }
