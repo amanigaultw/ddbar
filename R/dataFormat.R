@@ -6,12 +6,17 @@
 #'
 #' @examples
 #' rawdata <- data.frame(nationality = sample(c("French", "German", "British"), 100, replace=TRUE, prob=c(0.4, 0.3, 0.3)),
-#' sex = sample(c("Male", "Female"), 100, replace=TRUE, prob=c(0.5, 0.5)),
-#' age = sample(c("child", "adult", "older adult"), 100, replace=TRUE, prob=c(0.1, 0.7, 0.2)))
+#'                       sex = sample(c("Male", "Female"), 100, replace=TRUE, prob=c(0.5, 0.5)),
+#'                       age = sample(c("child", "adult", "older adult"), 100, replace=TRUE, prob=c(0.1, 0.7, 0.2)))
 #'
 #' formattedData <- dataFormat(rawdata)
 #'
-dataFormat <- function(data){
+#' rawdata2 <- data.frame(rawdata,
+#'                        IQ = round(rnorm(1000, mean = 100, sd = 10), 0))
+#'
+#' formattedData2 <- dataFormat(rawdata2)
+#'
+dataFormat <- function(data, FUN = NULL){
 
   if(any(is.na(data))){
     data[is.na(data)] <- "missing"
@@ -19,10 +24,11 @@ dataFormat <- function(data){
   }
 
   dataList <- getDataList(data)
-  lapply(dataList[!unlist(lapply(dataList, isTerminal))], toeChartListFormat)
+  lapply(dataList[!unlist(lapply(dataList, isTerminal))], toeChartListFormat, FUN)
 }
 
 firstNonUniqueCol <- function(data){
+  data <- data[, !sapply(data, is.numeric)]
   for(i in 1:ncol(data)){
     if(length(unique(data[,i])) == 1) next
     return(i)
@@ -30,6 +36,7 @@ firstNonUniqueCol <- function(data){
 }
 
 isTerminal <- function(data){
+  data <- data[, !sapply(data, is.numeric)]
   if(is.null(firstNonUniqueCol(data))) return(TRUE)
   return(FALSE)
 }
@@ -57,17 +64,27 @@ getDataList <- function(rawdata){
   done
 }
 
-toeChartListFormat <- function(data){
+toeChartListFormat <- function(data, FUN){
   dataGroupId = getDataGroupId(data)
-  temp <- table(data[,firstNonUniqueCol(data)])
-  tempData <- list()
-  if(firstNonUniqueCol(data) == ncol(data)){
-    for(i in seq_along(temp)) tempData[[i]] <- unname(c(names(temp[i]), temp[i]))
+  namedValueVector <- getNamedValueVector(data, FUN)
+  dataFormatted <- list()
+  if(firstNonUniqueCol(data) == ncol(data[, !sapply(data, is.numeric)])){
+    for(i in seq_along(namedValueVector)) dataFormatted[[i]] <- unname(c(names(namedValueVector[i]), namedValueVector[i]))
   }else if(firstNonUniqueCol(data) == 1){
-    for(i in seq_along(temp)) tempData[[i]] <- unname(c(names(temp[i]), temp[i], names(temp[i])))
+    for(i in seq_along(namedValueVector)) dataFormatted[[i]] <- unname(c(names(namedValueVector[i]), namedValueVector[i], names(namedValueVector[i])))
   }else{
-    for(i in seq_along(temp)) tempData[[i]] <- unname(c(names(temp[i]), temp[i], paste0(c(dataGroupId, names(temp[i])), collapse = "-")))
+    for(i in seq_along(namedValueVector)) dataFormatted[[i]] <- unname(c(names(namedValueVector[i]), namedValueVector[i], paste0(c(dataGroupId, names(namedValueVector[i])), collapse = "-")))
   }
   list(dataGroupId = dataGroupId,
-       data = tempData)
+       data = dataFormatted)
+}
+
+
+getNamedValueVector <- function(data, FUN){
+  if(is.character(data[, ncol(data)])) return(table(data[,firstNonUniqueCol(data)]))
+  if(is.null(FUN)) FUN <- function(x) sum(x, na.rm = T)
+  temp <- aggregate(data[,ncol(data)], by = list(data[, firstNonUniqueCol(data)]), FUN)
+  namedValueVector <- temp[,2]
+  names(namedValueVector) <- temp[,1]
+  return(namedValueVector)
 }

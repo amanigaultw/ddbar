@@ -1,29 +1,29 @@
 #' Drill Down Bar Apache echarts Widget
 #'
-#' @param data
-#' @param width
-#' @param height
-#' @param elementId
+#' @param data data list object to be plotted; typically generated using \code{dataFormat()}.
+#' @param width width of the graph as CSS units.
+#' @param height height of the graph as CSS units.
+#' @param elementId html element id.
 #'
 #' @import htmlwidgets
 #'
 #' @examples
 #'
-#' data <- data.frame(nationality = sample(c("French", "German", "British"), 1000, replace=TRUE, prob=c(0.4, 0.3, 0.3)),
-#'                    sex = sample(c("Male", "Female"), 1000, replace=TRUE, prob=c(0.5, 0.5)),
-#'                    age = sample(c("child", "adult", "older adult"), 1000, replace=TRUE, prob=c(0.1, 0.7, 0.2)),
-#'                    language = sample(c("unilingual", "bilingual"), 1000, replace=TRUE, prob=c(0.7, 0.3)),
-#'                    TV = sample(c("less than 2h TV / day", "more than 2h TV / day"), 1000, replace=TRUE, prob=c(0.7, 0.3)),
-#'                    politics = sample(c("left", "center", "right"), 1000, replace=TRUE, prob=c(0.3, 0.4, 0.3)))
+#' rawdata <- data.frame(nationality = sample(c("French", "German", "British"), 100, replace=TRUE, prob=c(0.4, 0.3, 0.3)),
+#'                       sex = sample(c("Male", "Female"), 100, replace=TRUE, prob=c(0.5, 0.5)),
+#'                       occupation = sample(c("Chef", "Pilot", "Developer"), 100, replace=TRUE, prob=c(0.1, 0.7, 0.2)),
+#'                       netWorth = rpois(100, 1.5) * 100000)
 #'
-#' ddbar(data)
+#' rawdata |>
+#'   dataFormat(mean) |>
+#'   ddbar()
 #'
 #' @export
 ddbar <- function(data, width = NULL, height = NULL, elementId = NULL) {
 
   # forward options using x
   x = list(
-    data = dataFormat(data)
+    data = data
   )
 
   # create widget

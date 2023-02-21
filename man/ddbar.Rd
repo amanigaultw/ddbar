@@ -6,30 +6,27 @@
 \usage{
 ddbar(data, width = NULL, height = NULL, elementId = NULL)
 }
+\arguments{
+\item{data}{data list object to be plotted; typically generated using \code{dataFormat()}.}
+
+\item{width}{width of the graph as CSS units.}
+
+\item{height}{height of the graph as CSS units.}
+
+\item{elementId}{html element id.}
+}
 \description{
-\if{html}{\out{
-<Add Description>
-}}
+Drill Down Bar Apache echarts Widget
 }
 \examples{
 
-data = list(list(dataGroupId = "1",
-                 data = list(c("1_1", 5, "1_1"),
-                             c("1_2", 2, "1_2"))),
-            list(dataGroupId = "1_1",
-                 data = list(c("1_1_1", 6, "1_1_1"),
-                             c("1_1_2", 8, "1_1_2"))),
-            list(dataGroupId = "1_2",
-                 data = list(c("1_2_1", 1),
-                             c("1_2_2", 3))),
-            list(dataGroupId = "1_1_1",
-                 data = list(c("1_1_1_1", 10),
-                             c("1_1_1_2", 9))),
-            list(dataGroupId = "1_1_2",
-                 data = list(c("1_1_2_1", 12),
-                             c("1_1_2_2", 7)))
-       )
+rawdata <- data.frame(nationality = sample(c("French", "German", "British"), 100, replace=TRUE, prob=c(0.4, 0.3, 0.3)),
+                      sex = sample(c("Male", "Female"), 100, replace=TRUE, prob=c(0.5, 0.5)),
+                      occupation = sample(c("Chef", "Pilot", "Developer"), 100, replace=TRUE, prob=c(0.1, 0.7, 0.2)),
+                      netWorth = rpois(100, 1.5) * 100000)
 
-ddbar(data)
+rawdata |>
+  dataFormat(mean) |>
+  ddbar()
 
 }
