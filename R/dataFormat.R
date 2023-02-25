@@ -1,18 +1,22 @@
 #' Format a given dataframe for use by ddbar
 #'
-#' @param data
+#' @param data input dataframe
+#' @param FUN aggregation function
 #'
 #' @export
 #'
 #' @examples
-#' rawdata <- data.frame(nationality = sample(c("French", "German", "British"), 100, replace=TRUE, prob=c(0.4, 0.3, 0.3)),
-#'                       sex = sample(c("Male", "Female"), 100, replace=TRUE, prob=c(0.5, 0.5)),
-#'                       age = sample(c("child", "adult", "older adult"), 100, replace=TRUE, prob=c(0.1, 0.7, 0.2)))
+#' rawdata <- data.frame(nationality = sample(c("French", "German", "British"),
+#'                       100, replace=TRUE, prob=c(0.4, 0.3, 0.3)),
+#'                       sex = sample(c("Male", "Female"),
+#'                       100, replace=TRUE, prob=c(0.5, 0.5)),
+#'                       age = sample(c("child", "adult", "older adult"),
+#'                       100, replace=TRUE, prob=c(0.1, 0.7, 0.2)))
 #'
 #' formattedData <- dataFormat(rawdata)
 #'
 #' rawdata2 <- data.frame(rawdata,
-#'                        IQ = round(rnorm(1000, mean = 100, sd = 10), 0))
+#'                        IQ = round(rnorm(100, mean = 100, sd = 10), 0))
 #'
 #' formattedData2 <- dataFormat(rawdata2)
 #'
@@ -87,7 +91,7 @@ toeChartListFormat <- function(data, FUN){
 getNamedValueVector <- function(data, FUN){
   if(is.character(data[, ncol(data)])) return(table(data[,firstNonUniqueCol(data)]))
   if(is.null(FUN)) FUN <- function(x) sum(x, na.rm = T)
-  temp <- aggregate(data[,ncol(data)], by = list(data[, firstNonUniqueCol(data)]), FUN)
+  temp <- stats::aggregate(data[,ncol(data)], by = list(data[, firstNonUniqueCol(data)]), FUN)
   namedValueVector <- temp[,2]
   names(namedValueVector) <- temp[,1]
   return(namedValueVector)

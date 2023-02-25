@@ -11,9 +11,12 @@
 #'
 #' @examples
 #'
-#' rawdata <- data.frame(nationality = sample(c("French", "German", "British"), 100, replace=TRUE, prob=c(0.4, 0.3, 0.3)),
-#'                       sex = sample(c("Male", "Female"), 100, replace=TRUE, prob=c(0.5, 0.5)),
-#'                       occupation = sample(c("Chef", "Pilot", "Developer"), 100, replace=TRUE, prob=c(0.1, 0.7, 0.2)),
+#' rawdata <- data.frame(nationality = sample(c("French", "German", "British"),
+#'                       100, replace=TRUE, prob=c(0.4, 0.3, 0.3)),
+#'                       sex = sample(c("Male", "Female"),
+#'                       100, replace=TRUE, prob=c(0.5, 0.5)),
+#'                       occupation = sample(c("Chef", "Pilot", "Developer"),
+#'                       100, replace=TRUE, prob=c(0.1, 0.7, 0.2)),
 #'                       netWorth = rpois(100, 1.5) * 100000)
 #'
 #' options <- list(

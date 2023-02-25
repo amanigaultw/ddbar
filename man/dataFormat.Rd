@@ -7,20 +7,25 @@
 dataFormat(data, FUN = NULL)
 }
 \arguments{
-\item{data}{}
+\item{data}{input dataframe}
+
+\item{FUN}{aggregation function}
 }
 \description{
 Format a given dataframe for use by ddbar
 }
 \examples{
-rawdata <- data.frame(nationality = sample(c("French", "German", "British"), 100, replace=TRUE, prob=c(0.4, 0.3, 0.3)),
-                      sex = sample(c("Male", "Female"), 100, replace=TRUE, prob=c(0.5, 0.5)),
-                      age = sample(c("child", "adult", "older adult"), 100, replace=TRUE, prob=c(0.1, 0.7, 0.2)))
+rawdata <- data.frame(nationality = sample(c("French", "German", "British"),
+                      100, replace=TRUE, prob=c(0.4, 0.3, 0.3)),
+                      sex = sample(c("Male", "Female"),
+                      100, replace=TRUE, prob=c(0.5, 0.5)),
+                      age = sample(c("child", "adult", "older adult"),
+                      100, replace=TRUE, prob=c(0.1, 0.7, 0.2)))
 
 formattedData <- dataFormat(rawdata)
 
 rawdata2 <- data.frame(rawdata,
-                       IQ = round(rnorm(1000, mean = 100, sd = 10), 0))
+                       IQ = round(rnorm(100, mean = 100, sd = 10), 0))
 
 formattedData2 <- dataFormat(rawdata2)
 
