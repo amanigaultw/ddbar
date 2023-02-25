@@ -16,9 +16,18 @@
 #'                       occupation = sample(c("Chef", "Pilot", "Developer"), 100, replace=TRUE, prob=c(0.1, 0.7, 0.2)),
 #'                       netWorth = rpois(100, 1.5) * 100000)
 #'
+#' options <- list(
+#'   tooltip = list(
+#'     trigger = 'axis',
+#'     axisPointer = list(
+#'       type= 'shadow'
+#'     )
+#'   )
+#' )
+#'
 #' rawdata |>
 #'   dataFormat(mean) |>
-#'   ddbar()
+#'   ddbar(options)
 #'
 #' @export
 ddbar <- function(data, options = NULL, horizontal = F, width = NULL, height = NULL, elementId = NULL) {

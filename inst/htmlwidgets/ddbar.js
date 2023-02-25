@@ -11,26 +11,6 @@ HTMLWidgets.widget({
     var myChart = echarts.init(chartDom);
     var option;
 
-    //var xAxis = {type: 'category'};
-    //var yAxis = {};
-    //var encode = {
-    //    x: 0,
-    //    y: 1,
-    //    itemGroupId: 2
-    //};
-
-    //const flip = new Boolean(false);
-
-    //if(flip == true){
-    //  xAxis = {};
-    //  yAxis = {type: 'category'};
-    //  encode = {
-    //    x: 1,
-    //    y: 0,
-    //    itemGroupId: 2
-    //  };
-    //}
-
     return {
 
       renderValue: function(x) {
