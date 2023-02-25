@@ -46,8 +46,6 @@ HTMLWidgets.widget({
           itemGroupId: 2
         };
 
-        console.log(x.flip);
-
         if(x.flip === "TRUE"){
           xAxis = {};
           yAxis = {type: 'category'};
