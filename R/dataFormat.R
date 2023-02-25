@@ -21,16 +21,14 @@
 #' formattedData2 <- dataFormat(rawdata2)
 #'
 dataFormat <- function(data, FUN = NULL){
-
+  #check input data
   if(any(is.na(data[, !sapply(data, is.numeric)]))){
     initialRowCount <- nrow(data)
     data <- data[rowSums(is.na(data[, !sapply(data, is.numeric)])) == 0,]
-
     warning(paste(initialRowCount - nrow(data), "rows were dropped due to missing values."))
   }
-
   stopifnot("Too much missing data to generate a valid drill down plot" = nrow(data) > 0)
-
+  #reformat data
   dataList <- getDataList(data)
   lapply(dataList[!unlist(lapply(dataList, isTerminal))], toeChartListFormat, FUN)
 }
