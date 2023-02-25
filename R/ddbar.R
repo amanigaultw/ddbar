@@ -4,6 +4,8 @@
 #' @param width width of the graph as CSS units.
 #' @param height height of the graph as CSS units.
 #' @param elementId html element id.
+#' @param options list of apache echarts options
+#' @param horizontal bool indicating whether the bar plot should be horizontal
 #'
 #' @import htmlwidgets
 #'
@@ -19,7 +21,7 @@
 #'   ddbar()
 #'
 #' @export
-ddbar <- function(data, options = NULL, flip = F, width = NULL, height = NULL, elementId = NULL) {
+ddbar <- function(data, options = NULL, horizontal = F, width = NULL, height = NULL, elementId = NULL) {
 
   if(is.null(options)){
     options <- list(animationDurationUpdate = 1000)
@@ -29,7 +31,7 @@ ddbar <- function(data, options = NULL, flip = F, width = NULL, height = NULL, e
   x = list(
     data = data,
     options = options,
-    flip = as.character(flip)
+    flip = as.character(horizontal)
   )
 
   # create widget

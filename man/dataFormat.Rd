@@ -2,7 +2,7 @@
 % Please edit documentation in R/dataFormat.R
 \name{dataFormat}
 \alias{dataFormat}
-\title{Format dataframe for use by ddbar}
+\title{Format a given dataframe for use by ddbar}
 \usage{
 dataFormat(data, FUN = NULL)
 }
@@ -10,7 +10,7 @@ dataFormat(data, FUN = NULL)
 \item{data}{}
 }
 \description{
-Format dataframe for use by ddbar
+Format a given dataframe for use by ddbar
 }
 \examples{
 rawdata <- data.frame(nationality = sample(c("French", "German", "British"), 100, replace=TRUE, prob=c(0.4, 0.3, 0.3)),

@@ -4,10 +4,21 @@
 \alias{ddbar}
 \title{Drill Down Bar Apache echarts Widget}
 \usage{
-ddbar(data, width = NULL, height = NULL, elementId = NULL)
+ddbar(
+  data,
+  options = NULL,
+  horizontal = F,
+  width = NULL,
+  height = NULL,
+  elementId = NULL
+)
 }
 \arguments{
 \item{data}{data list object to be plotted; typically generated using \code{dataFormat()}.}
+
+\item{options}{list of apache echarts options}
+
+\item{horizontal}{bool indicating whether the bar plot should be horizontal}
 
 \item{width}{width of the graph as CSS units.}
 
