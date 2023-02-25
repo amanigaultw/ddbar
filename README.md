@@ -38,9 +38,11 @@ rawdata <- data.frame(nationality = sample(c("French", "German", "British"), 100
 options <- list(
   tooltip = list(
     trigger = 'axis',
-    axisPointer = list(type= 'shadow')
-    )
+    axisPointer = list(
+      type = 'shadow'
+      )
   )
+)
 
 #generate bar plot
 rawdata |> 
