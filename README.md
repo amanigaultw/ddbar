@@ -35,10 +35,12 @@ rawdata <- data.frame(nationality = sample(c("French", "German", "British"), 100
                       politics = sample(c("left", "center", "right"), 1000, replace=TRUE, prob=c(0.3, 0.4, 0.3)))
 
 #pass in some example options
-options <- list(tooltip = list(trigger = 'axis',
-                               axisPointer = list(type= 'shadow')
-                               )
-                )
+options <- list(
+  tooltip = list(
+    trigger = 'axis',
+    axisPointer = list(type= 'shadow')
+    )
+  )
 
 #generate bar plot
 rawdata |> 
