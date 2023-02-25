@@ -72,7 +72,8 @@ HTMLWidgets.widget({
                 goBack();
               }
             }
-            ]
+          ],
+          animationDurationUpdate: 1000
         }
 
 // Generate 1+1 options for each data

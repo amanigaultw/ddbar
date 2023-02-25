@@ -35,8 +35,7 @@ rawdata <- data.frame(nationality = sample(c("French", "German", "British"), 100
                       politics = sample(c("left", "center", "right"), 1000, replace=TRUE, prob=c(0.3, 0.4, 0.3)))
 
 #pass in some example options
-options <- list(animationDurationUpdate = 1000,
-                tooltip = list(trigger = 'axis',
+options <- list(tooltip = list(trigger = 'axis',
                                axisPointer = list(type= 'shadow')
                                )
                 )
