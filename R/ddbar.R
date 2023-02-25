@@ -19,11 +19,17 @@
 #'   ddbar()
 #'
 #' @export
-ddbar <- function(data, width = NULL, height = NULL, elementId = NULL) {
+ddbar <- function(data, options = NULL, flip = F, width = NULL, height = NULL, elementId = NULL) {
+
+  if(is.null(options)){
+    options <- list(animationDurationUpdate = 1000)
+  }
 
   # forward options using x
   x = list(
-    data = data
+    data = data,
+    options = options,
+    flip = as.character(flip)
   )
 
   # create widget

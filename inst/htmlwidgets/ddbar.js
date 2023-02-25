@@ -11,12 +11,71 @@ HTMLWidgets.widget({
     var myChart = echarts.init(chartDom);
     var option;
 
+    //var xAxis = {type: 'category'};
+    //var yAxis = {};
+    //var encode = {
+    //    x: 0,
+    //    y: 1,
+    //    itemGroupId: 2
+    //};
+
+    //const flip = new Boolean(false);
+
+    //if(flip == true){
+    //  xAxis = {};
+    //  yAxis = {type: 'category'};
+    //  encode = {
+    //    x: 1,
+    //    y: 0,
+    //    itemGroupId: 2
+    //  };
+    //}
+
     return {
 
       renderValue: function(x) {
 
-        // TODO: code to render the widget, e.g.
         const allDataGroups = x.data
+        const extraOptions = x.options
+
+        var xAxis = {type: 'category'};
+        var yAxis = {};
+        var encode = {
+          x: 0,
+          y: 1,
+          itemGroupId: 2
+        };
+
+        console.log(x.flip);
+
+        if(x.flip === "TRUE"){
+          xAxis = {};
+          yAxis = {type: 'category'};
+          encode = {
+            x: 1,
+            y: 0,
+            itemGroupId: 2
+          };
+        }
+
+        const baseOptions = {
+          xAxis: xAxis,
+          yAxis: yAxis,
+          graphic: [
+            {
+              type: 'text',
+              left: 50,
+              top: 20,
+              style: {
+                text: 'Back',
+                fontSize: 18
+              },
+              onclick: function () {
+                goBack();
+              }
+            }
+            ]
+        }
 
 // Generate 1+1 options for each data
     const allOptionsWithItemGroupId = {};
@@ -25,21 +84,13 @@ HTMLWidgets.widget({
     allDataGroups.forEach((dataGroup, index) => {
       const { dataGroupId, data } = dataGroup;
       const optionWithItemGroupId = {
-        xAxis: {
-          type: 'category'
-        },
-        yAxis: {},
-        // dataGroupId: dataGroupId,
-        animationDurationUpdate: 500,
+        ...baseOptions,
+        ...extraOptions,
         series: {
           type: 'bar',
           // id: "sales",
           dataGroupId: dataGroupId,
-          encode: {
-            x: 0,
-            y: 1,
-            itemGroupId: 2
-          },
+          encode: encode,
           data: data,
           universalTransition: {
             enabled: true,
@@ -53,41 +104,18 @@ HTMLWidgets.widget({
           textStyle: {
             fontSize: 20
           }
-        },
-        graphic: [
-          {
-            type: 'text',
-            left: 50,
-            top: 20,
-            style: {
-              text: 'Back',
-              fontSize: 18
-            },
-            onclick: function () {
-              goBack();
-            }
-          }
-        ]
+        }
       };
+
       const optionWithoutItemGroupId = {
-        xAxis: {
-          type: 'category'
-        },
-        yAxis: {},
-        // dataGroupId: dataGroupId,
-        animationDurationUpdate: 500,
+        ...baseOptions,
+        ...extraOptions,
         series: {
           type: 'bar',
           // id: "sales",
           dataGroupId: dataGroupId,
-          encode: {
-            x: 0,
-            y: 1
-            // itemGroupId: 2,
-          },
-          data: data.map((item, index) => {
-            return item.slice(0, 2); // This is what "without itemGroupId" means
-          }),
+          encode: encode,
+          data: data,
           universalTransition: {
             enabled: true,
             divideShape: 'clone'
@@ -100,21 +128,7 @@ HTMLWidgets.widget({
           textStyle: {
             fontSize: 20
           }
-        },
-        graphic: [
-          {
-            type: 'text',
-            left: 50,
-           top: 20,
-            style: {
-              text: 'Back',
-              fontSize: 18
-            },
-            onclick: function () {
-              goBack();
-            }
-          }
-        ]
+        }
       };
       allOptionsWithItemGroupId[dataGroupId] = optionWithItemGroupId;
       allOptionsWithoutItemGroupId[dataGroupId] = optionWithoutItemGroupId;
@@ -142,7 +156,7 @@ HTMLWidgets.widget({
       }
     };
 
-    option = allOptionsWithItemGroupId[' ']; // The initial option is the root data option
+    option = allOptionsWithItemGroupId['']; // The initial option is the root data option
 
     myChart.on('click', 'series.bar', (params) => {
       if (params.data[2]) {
@@ -159,7 +173,6 @@ HTMLWidgets.widget({
 
       resize: function(width, height) {
 
-        // TODO: code to re-render the widget with a new size
         if(!myChart)
           return;
 
