@@ -120,6 +120,9 @@ HTMLWidgets.widget({
       dataGroupIdStack.push(myChart.getOption().series[0].dataGroupId); // push current dataGroupId into stack.
       myChart.setOption(allOptionsWithoutItemGroupId[dataGroupId], false);
       myChart.setOption(allOptionsWithItemGroupId[dataGroupId], false); // setOption twice? Yeah, it is dirty.
+      if (HTMLWidgets.shinyMode){
+        Shiny.setInputValue("ddbar_selection", dataGroupId);
+      }
     };
 
     const goBack = () => {
@@ -127,6 +130,9 @@ HTMLWidgets.widget({
         console.log('Already in root dataGroup!');
       } else {
         console.log('Go back to previous level');
+        if (HTMLWidgets.shinyMode){
+          Shiny.setInputValue("ddbar_selection", dataGroupIdStack.slice(-1)[0]);
+        }
         myChart.setOption(
           allOptionsWithoutItemGroupId[myChart.getOption().series[0].dataGroupId],
           false
