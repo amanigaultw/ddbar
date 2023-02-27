@@ -10,148 +10,152 @@ HTMLWidgets.widget({
     var chartDom = document.getElementById(el.id);
     var myChart = echarts.init(chartDom);
     var option;
+    var initialized = false;
 
     return {
 
       renderValue: function(x) {
 
-        const allDataGroups = x.data
-        const extraOptions = x.options
+        if (!initialized) {
+          initialized = true;
+          // Code to set up event listeners and anything else that needs to run just once
 
-        var xAxis = {type: 'category'};
-        var yAxis = {};
-        var encode = {
-          x: 0,
-          y: 1,
-          itemGroupId: 2
-        };
+          const allDataGroups = x.data
+          const extraOptions = x.options
 
-        if(x.flip === "TRUE"){
-          xAxis = {};
-          yAxis = {type: 'category'};
-          encode = {
-            x: 1,
-            y: 0,
+          var xAxis = {type: 'category'};
+          var yAxis = {};
+          var encode = {
+            x: 0,
+            y: 1,
             itemGroupId: 2
           };
-        }
 
-        const baseOptions = {
-          xAxis: xAxis,
-          yAxis: yAxis,
-          graphic: [
-            {
-              type: 'text',
-              left: 50,
-              top: 20,
-              style: {
-                text: 'Back',
-                fontSize: 18
-              },
-              onclick: function () {
-                goBack();
+          if(x.flip === "TRUE"){
+            xAxis = {};
+            yAxis = {type: 'category'};
+            encode = {
+              x: 1,
+              y: 0,
+              itemGroupId: 2
+            };
+          }
+
+          const baseOptions = {
+            xAxis: xAxis,
+            yAxis: yAxis,
+            graphic: [
+              {
+                type: 'text',
+                left: 50,
+                top: 20,
+                style: {
+                  text: 'Back',
+                  fontSize: 18
+                },
+                onclick: function () {
+                  goBack();
+                }
+              }
+            ],
+            animationDurationUpdate: 1000
+          };
+
+        // Generate 1+1 options for each data
+      const allOptionsWithItemGroupId = {};
+      const allOptionsWithoutItemGroupId = {};
+
+      allDataGroups.forEach((dataGroup, index) => {
+        const { dataGroupId, data } = dataGroup;
+
+        const title = {
+            title: {
+              text: dataGroupId,
+              left: "center",
+              top: "bottom",
+              textStyle: {
+                fontSize: 20
               }
             }
-          ],
-          animationDurationUpdate: 1000
-        };
+          };
 
-// Generate 1+1 options for each data
-    const allOptionsWithItemGroupId = {};
-    const allOptionsWithoutItemGroupId = {};
+        if(x.showTitle === "FALSE"){
+          title.title.text = "";
+        }
 
-    allDataGroups.forEach((dataGroup, index) => {
-      const { dataGroupId, data } = dataGroup;
-
-      const title = {
-          title: {
-            text: dataGroupId,
-            left: "center",
-            top: "bottom",
-            textStyle: {
-              fontSize: 20
+        const optionWithItemGroupId = {
+          ...baseOptions,
+          ...extraOptions,
+          ...title,
+          series: {
+            type: 'bar',
+            // id: "sales",
+            dataGroupId: dataGroupId,
+            encode: encode,
+            data: data,
+            universalTransition: {
+              enabled: true,
+              divideShape: 'clone'
             }
           }
         };
 
-      if(x.showTitle === "FALSE"){
-        title.title.text = "";
-      }
-
-      const optionWithItemGroupId = {
-        ...baseOptions,
-        ...extraOptions,
-        ...title,
-        series: {
-          type: 'bar',
-          // id: "sales",
-          dataGroupId: dataGroupId,
-          encode: encode,
-          data: data,
-          universalTransition: {
-            enabled: true,
-            divideShape: 'clone'
+        const optionWithoutItemGroupId = {
+          ...baseOptions,
+          ...extraOptions,
+          ...title,
+          series: {
+            type: 'bar',
+            // id: "sales",
+            dataGroupId: dataGroupId,
+            encode: encode,
+            data: data,
+            universalTransition: {
+              enabled: true,
+              divideShape: 'clone'
+            }
           }
-        }
-      };
+        };
+        allOptionsWithItemGroupId[dataGroupId] = optionWithItemGroupId;
+        allOptionsWithoutItemGroupId[dataGroupId] = optionWithoutItemGroupId;
+      });
 
-      const optionWithoutItemGroupId = {
-        ...baseOptions,
-        ...extraOptions,
-        ...title,
-        series: {
-          type: 'bar',
-          // id: "sales",
-          dataGroupId: dataGroupId,
-          encode: encode,
-          data: data,
-          universalTransition: {
-            enabled: true,
-            divideShape: 'clone'
-          }
-        }
-      };
-      allOptionsWithItemGroupId[dataGroupId] = optionWithItemGroupId;
-      allOptionsWithoutItemGroupId[dataGroupId] = optionWithoutItemGroupId;
-    });
+      // A stack to remember previous dataGroupsId
+      const dataGroupIdStack = [];
 
-// A stack to remember previous dataGroupsId
-    const dataGroupIdStack = [];
-
-    const goForward = (dataGroupId) => {
-      dataGroupIdStack.push(myChart.getOption().series[0].dataGroupId); // push current dataGroupId into stack.
-      myChart.setOption(allOptionsWithoutItemGroupId[dataGroupId], false);
-      myChart.setOption(allOptionsWithItemGroupId[dataGroupId], false); // setOption twice? Yeah, it is dirty.
-      if (HTMLWidgets.shinyMode){
-        Shiny.setInputValue("ddbar_selection", dataGroupId);
-      }
-    };
-
-    const goBack = () => {
-      if (dataGroupIdStack.length === 0) {
-        console.log('Already in root dataGroup!');
-      } else {
-        console.log('Go back to previous level');
+      const goForward = (dataGroupId) => {
+        dataGroupIdStack.push(myChart.getOption().series[0].dataGroupId); // push current dataGroupId into stack.
+        myChart.setOption(allOptionsWithoutItemGroupId[dataGroupId], false);
+        myChart.setOption(allOptionsWithItemGroupId[dataGroupId], false); // setOption twice? Yeah, it is dirty.
         if (HTMLWidgets.shinyMode){
-          Shiny.setInputValue("ddbar_selection", dataGroupIdStack.slice(-1)[0]);
+          Shiny.setInputValue(x.reactiveID, dataGroupId);
         }
-        myChart.setOption(
-          allOptionsWithoutItemGroupId[myChart.getOption().series[0].dataGroupId],
-          false
-        );
-        myChart.setOption(allOptionsWithItemGroupId[dataGroupIdStack.pop()], true); // Note: the parameter notMerge is set true
-      }
-    };
+      };
 
-    option = allOptionsWithItemGroupId['']; // The initial option is the root data option
+      const goBack = () => {
+        if (dataGroupIdStack.length === 0) {
+          console.log('Already in root dataGroup!');
+        } else {
+          console.log('Go back to previous level');
+          if (HTMLWidgets.shinyMode){
+            Shiny.setInputValue(x.reactiveID, dataGroupIdStack.slice(-1)[0]);
+          }
+          myChart.setOption(allOptionsWithoutItemGroupId[myChart.getOption().series[0].dataGroupId],false);
+          myChart.setOption(allOptionsWithItemGroupId[dataGroupIdStack.pop()], true); // Note: the parameter notMerge is set true
+        }
+      };
 
-    myChart.on('click', 'series.bar', (params) => {
-      if (params.data[2]) {
-        // If current params is not belong to the "childest" data, then it has data[2]
-        const dataGroupId = params.data[2];
-        goForward(dataGroupId);
-      }
-    });
+      option = allOptionsWithItemGroupId['']; // The initial option is the root data option
+
+      myChart.on('click', 'series.bar', (params) => {
+        if (params.data[2]) {
+          // If current params is not belong to the "childest" data, then it has data[2]
+          const dataGroupId = params.data[2];
+          goForward(dataGroupId);
+        }
+      });
+
+        } // end of initialization procedure
 
         option && myChart.setOption(option);
 

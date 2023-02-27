@@ -33,10 +33,14 @@
 #'   ddbar(options)
 #'
 #' @export
-ddbar <- function(data, options = NULL, horizontal = F, showTitle = T, width = NULL, height = NULL, elementId = NULL) {
+ddbar <- function(data, options = NULL, horizontal = F, showTitle = T, reactiveID = NULL, width = NULL, height = NULL, elementId = NULL) {
 
   if(is.null(options)){
     options <- list(animationDurationUpdate = 1000)
+  }
+
+  if(is.null(reactiveID)){
+    reactiveID <- "ddbar_selection"
   }
 
   # forward options using x
@@ -44,7 +48,8 @@ ddbar <- function(data, options = NULL, horizontal = F, showTitle = T, width = N
     data = data,
     options = options,
     flip = as.character(horizontal),
-    showTitle = as.character(showTitle)
+    showTitle = as.character(showTitle),
+    reactiveID = reactiveID
   )
 
   # create widget
