@@ -33,7 +33,7 @@
 #'   ddbar(options)
 #'
 #' @export
-ddbar <- function(data, options = NULL, horizontal = F, width = NULL, height = NULL, elementId = NULL) {
+ddbar <- function(data, options = NULL, horizontal = F, showTitle = T, width = NULL, height = NULL, elementId = NULL) {
 
   if(is.null(options)){
     options <- list(animationDurationUpdate = 1000)
@@ -43,7 +43,8 @@ ddbar <- function(data, options = NULL, horizontal = F, width = NULL, height = N
   x = list(
     data = data,
     options = options,
-    flip = as.character(horizontal)
+    flip = as.character(horizontal),
+    showTitle = as.character(showTitle)
   )
 
   # create widget

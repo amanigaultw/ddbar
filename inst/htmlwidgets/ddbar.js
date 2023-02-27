@@ -54,7 +54,7 @@ HTMLWidgets.widget({
             }
           ],
           animationDurationUpdate: 1000
-        }
+        };
 
 // Generate 1+1 options for each data
     const allOptionsWithItemGroupId = {};
@@ -62,9 +62,26 @@ HTMLWidgets.widget({
 
     allDataGroups.forEach((dataGroup, index) => {
       const { dataGroupId, data } = dataGroup;
+
+      const title = {
+          title: {
+            text: dataGroupId,
+            left: "center",
+            top: "bottom",
+            textStyle: {
+              fontSize: 20
+            }
+          }
+        };
+
+      if(x.showTitle === "FALSE"){
+        title.title.text = "";
+      }
+
       const optionWithItemGroupId = {
         ...baseOptions,
         ...extraOptions,
+        ...title,
         series: {
           type: 'bar',
           // id: "sales",
@@ -74,14 +91,6 @@ HTMLWidgets.widget({
           universalTransition: {
             enabled: true,
             divideShape: 'clone'
-          }
-        },
-        title: {
-          text: dataGroupId,
-          left: "center",
-          top: "bottom",
-          textStyle: {
-            fontSize: 20
           }
         }
       };
@@ -89,6 +98,7 @@ HTMLWidgets.widget({
       const optionWithoutItemGroupId = {
         ...baseOptions,
         ...extraOptions,
+        ...title,
         series: {
           type: 'bar',
           // id: "sales",
@@ -98,14 +108,6 @@ HTMLWidgets.widget({
           universalTransition: {
             enabled: true,
             divideShape: 'clone'
-          }
-        },
-        title: {
-          text: dataGroupId,
-          left: "center",
-          top: "bottom",
-          textStyle: {
-            fontSize: 20
           }
         }
       };
