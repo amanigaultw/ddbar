@@ -85,7 +85,6 @@ HTMLWidgets.widget({
 
         const optionWithItemGroupId = {
           ...baseOptions,
-          ...extraOptions,
           ...title,
           series: {
             type: 'bar',
@@ -97,12 +96,12 @@ HTMLWidgets.widget({
               enabled: true,
               divideShape: 'clone'
             }
-          }
+          },
+          ...extraOptions
         };
 
         const optionWithoutItemGroupId = {
           ...baseOptions,
-          ...extraOptions,
           ...title,
           series: {
             type: 'bar',
@@ -114,7 +113,8 @@ HTMLWidgets.widget({
               enabled: true,
               divideShape: 'clone'
             }
-          }
+          },
+          ...extraOptions
         };
         allOptionsWithItemGroupId[dataGroupId] = optionWithItemGroupId;
         allOptionsWithoutItemGroupId[dataGroupId] = optionWithoutItemGroupId;
