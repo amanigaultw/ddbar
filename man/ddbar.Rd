@@ -8,6 +8,8 @@ ddbar(
   data,
   options = NULL,
   horizontal = F,
+  showTitle = T,
+  reactiveID = NULL,
   width = NULL,
   height = NULL,
   elementId = NULL
@@ -19,6 +21,10 @@ ddbar(
 \item{options}{list of apache echarts options}
 
 \item{horizontal}{bool indicating whether the bar plot should be horizontal}
+
+\item{showTitle}{bool indicating whether to display a dynamic title}
+
+\item{reactiveID}{string id to be passed to \code{Shiny.setInputValue()} called within ddbar.js}
 
 \item{width}{width of the graph as CSS units.}
 

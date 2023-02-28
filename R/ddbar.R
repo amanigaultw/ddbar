@@ -6,6 +6,8 @@
 #' @param elementId html element id.
 #' @param options list of apache echarts options
 #' @param horizontal bool indicating whether the bar plot should be horizontal
+#' @param showTitle bool indicating whether to display a dynamic title
+#' @param reactiveID string id to be passed to \code{Shiny.setInputValue()} called within ddbar.js
 #'
 #' @import htmlwidgets
 #'
