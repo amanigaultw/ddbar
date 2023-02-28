@@ -4,12 +4,14 @@
 \alias{dataFormat}
 \title{Format a given dataframe for use by ddbar}
 \usage{
-dataFormat(data, FUN = NULL)
+dataFormat(data, FUN = NULL, delimiter = "|")
 }
 \arguments{
 \item{data}{input dataframe}
 
 \item{FUN}{aggregation function}
+
+\item{delimiter}{string delimiter for the dataGroupId}
 }
 \description{
 Format a given dataframe for use by ddbar

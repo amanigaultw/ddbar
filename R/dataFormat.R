@@ -2,6 +2,7 @@
 #'
 #' @param data input dataframe
 #' @param FUN aggregation function
+#' @param delimiter string delimiter for the dataGroupId
 #'
 #' @export
 #'
@@ -20,7 +21,7 @@
 #'
 #' formattedData2 <- dataFormat(rawdata2)
 #'
-dataFormat <- function(data, FUN = NULL){
+dataFormat <- function(data, FUN = NULL, delimiter = "|"){
   #check input data
   if(any(is.na(data[, !sapply(data, is.numeric)]))){
     initialRowCount <- nrow(data)
@@ -30,7 +31,7 @@ dataFormat <- function(data, FUN = NULL){
   stopifnot("Too much missing data to generate a valid drill down plot" = nrow(data) > 0)
   #reformat data
   dataList <- getDataList(data)
-  lapply(dataList[!unlist(lapply(dataList, isTerminal))], toeChartListFormat, FUN)
+  lapply(dataList[!unlist(lapply(dataList, isTerminal))], toeChartListFormat, FUN, delimiter)
 }
 
 firstNonUniqueCol <- function(data){
@@ -47,10 +48,10 @@ isTerminal <- function(data){
   return(FALSE)
 }
 
-getDataGroupId <- function(data){
+getDataGroupId <- function(data, delimiter){
   if (isTerminal(data)) return(NULL)
   if(firstNonUniqueCol(data) == 1) return("")
-  return(paste0(apply(as.data.frame(data[,1:(firstNonUniqueCol(data)-1)]), 2, function(x) unique(x)), collapse = "-"))
+  return(paste0(apply(as.data.frame(data[,1:(firstNonUniqueCol(data)-1)]), 2, function(x) unique(x)), collapse = delimiter))
 }
 
 getDataList <- function(rawdata){
@@ -70,8 +71,8 @@ getDataList <- function(rawdata){
   done
 }
 
-toeChartListFormat <- function(data, FUN){
-  dataGroupId = getDataGroupId(data)
+toeChartListFormat <- function(data, FUN, delimiter){
+  dataGroupId = getDataGroupId(data, delimiter)
   namedValueVector <- getNamedValueVector(data, FUN)
   dataFormatted <- list()
   if(firstNonUniqueCol(data) == ncol(data[, !sapply(data, is.numeric)])){
@@ -79,7 +80,7 @@ toeChartListFormat <- function(data, FUN){
   }else if(firstNonUniqueCol(data) == 1){
     for(i in seq_along(namedValueVector)) dataFormatted[[i]] <- unname(c(names(namedValueVector[i]), namedValueVector[i], names(namedValueVector[i])))
   }else{
-    for(i in seq_along(namedValueVector)) dataFormatted[[i]] <- unname(c(names(namedValueVector[i]), namedValueVector[i], paste0(c(dataGroupId, names(namedValueVector[i])), collapse = "-")))
+    for(i in seq_along(namedValueVector)) dataFormatted[[i]] <- unname(c(names(namedValueVector[i]), namedValueVector[i], paste0(c(dataGroupId, names(namedValueVector[i])), collapse = delimiter)))
   }
   list(dataGroupId = dataGroupId,
        data = dataFormatted)
