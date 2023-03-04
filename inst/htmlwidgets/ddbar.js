@@ -4,8 +4,6 @@ HTMLWidgets.widget({
 
 	type: 'output',
 
-	renderOnNullValue: true,
-
 	factory: function(el, width, height) {
 
 		var myChart = null;
