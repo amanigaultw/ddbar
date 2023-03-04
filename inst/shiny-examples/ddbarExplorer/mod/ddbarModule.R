@@ -4,7 +4,11 @@ ddbarModuleUI <- function(id) {
   ns <- NS(id)
 
   tagList(
-    ddbarOutput(ns('ddbar')),
+
+    actionButton(ns("show"), "Reorder variables"),
+
+    ddbarOutput(ns('ddbarPlot')),
+
     DT::dataTableOutput(ns('table'))
   )
 
@@ -17,28 +21,60 @@ ddbarModuleServer <- function(id, type = 1) {
 
     function(input, output, session) {
 
+      params <- reactiveValues(order = colnames(rawdata),
+                               data = rawdata)
 
-      output$ddbar = renderDdbar(
-        rawdata |>
+      observeEvent(input$show, {
+        showModal(modalDialog(
+          tagList(
+            fluidRow(
+              column(6,
+                     uiOutput(session$ns("selection")),
+                     actionButton(session$ns('update'),"Update")
+              ),
+              column(6,
+                     helpText('The order of elements'),
+                     tableOutput(session$ns('theorder'))
+              )
+            )
+          ),
+          footer = modalButton("Continue"),
+          size = "l"))
+      })
+
+      output$selection <- renderUI({
+        selectizeInput(session$ns('neworder'),
+                       'Select new order',
+                       choices = params$order,
+                       multiple = TRUE)
+      })
+
+      output$theorder <- renderTable(
+        params$order,
+        colnames = F
+      )
+
+      observeEvent(input$update,{
+        id <- params$order %in% input$neworder
+        params$order <- c(input$neworder, params$order[!id])
+        params$data <- params$data[,params$order]
+      })
+
+      output$ddbarPlot <- renderDdbar({
+        params$data |>
           dataFormat() |>
           ddbar(options,
                 reactiveID = session$ns("ddbar"))
-      )
+      })
 
-      # print the output of the ddbar-selection event (when fired)
       filteredData <- eventReactive(input$ddbar, {
         filterVector <- unlist(strsplit(input$ddbar, split="\\|"))
-        print(filterVector)
-        applyFilterVector(rawdata, filterVector)
+        applyFilterVector(params$data, filterVector)
       })
 
       output$table = DT::renderDataTable({
-        if(is.null(input$ddbar)){
-          data <- rawdata
-        } else {
-          data <- filteredData()
-        }
-
+        data <- params$data
+        if(!is.null(input$ddbar)) data <- filteredData()
         DT::datatable(data, options = list(lengthMenu = c(5, 30, 50), pageLength = 5))
       })
 
@@ -51,6 +87,7 @@ ddbarModuleServer <- function(id, type = 1) {
 # library(ddbar)
 # library(htmlwidgets)
 # library(DT)
+# library(shinyjs)
 #
 # applyFilterVector <- function(data, filterVector){
 #   if(!is.null(filterVector) && length(filterVector) > 0){
@@ -66,8 +103,6 @@ ddbarModuleServer <- function(id, type = 1) {
 # rawdata <- data.frame(nationality = sample(c("French", "German", "British"), 1000, replace=TRUE, prob=c(0.4, 0.3, 0.3)),
 #                       sex = sample(c("Male", "Female"), 1000, replace=TRUE, prob=c(0.5, 0.5)),
 #                       age = sample(c("child", "adult", "older adult"), 1000, replace=TRUE, prob=c(0.1, 0.7, 0.2)),
-#                       language = sample(c("unilingual", "bilingual"), 1000, replace=TRUE, prob=c(0.7, 0.3)),
-#                       TV = sample(c("less than 2h TV / day", "more than 2h TV / day"), 1000, replace=TRUE, prob=c(0.7, 0.3)),
 #                       politics = sample(c("left", "center", "right"), 1000, replace=TRUE, prob=c(0.3, 0.4, 0.3)))
 #
 # #pass in some example options
@@ -85,7 +120,6 @@ ddbarModuleServer <- function(id, type = 1) {
 # )
 #
 # server <- function(input, output, session) {
-#
 #   ddbarModuleServer("test1")
 # }
 #

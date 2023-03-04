@@ -4,21 +4,8 @@ ddbarModuleUI <- function(id) {
   ns <- NS(id)
 
   tagList(
-    modalDialog(
-      tagList(
-        fluidRow(
-          column(6,
-                 uiOutput(ns("selection")),
-                 actionButton(ns('update'),"Update")
-          ),
-          column(6,
-                 helpText('The order of elements'),
-                 tableOutput(ns('theorder'))
-          )
-        )
-      ),
-      footer = modalButton("Continue"),
-      size = "l"),
+
+    actionButton(ns("show"), "Reorder variables"),
 
     ddbarOutput(ns('ddbarPlot')),
 
@@ -36,6 +23,24 @@ ddbarModuleServer <- function(id, type = 1) {
 
       params <- reactiveValues(order = colnames(rawdata),
                                data = rawdata)
+
+      observeEvent(input$show, {
+        showModal(modalDialog(
+          tagList(
+            fluidRow(
+              column(6,
+                     uiOutput(session$ns("selection")),
+                     actionButton(session$ns('update'),"Update")
+              ),
+              column(6,
+                     helpText('The order of elements'),
+                     tableOutput(session$ns('theorder'))
+              )
+            )
+          ),
+          footer = modalButton("Continue"),
+          size = "l"))
+      })
 
       output$selection <- renderUI({
         selectizeInput(session$ns('neworder'),

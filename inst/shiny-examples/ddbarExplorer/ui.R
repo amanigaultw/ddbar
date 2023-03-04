@@ -1,3 +1,3 @@
-shinyUI(
+fluidPage(
   ddbarModuleUI("ddbarMain")
 )
