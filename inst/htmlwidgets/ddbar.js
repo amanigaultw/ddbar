@@ -14,7 +14,6 @@ HTMLWidgets.widget({
 
 				var option;
 				var allDataGroups;
-				var allDataGroupsCOPY;
 				var dataGroupIdStack;
 				var allOptionsWithItemGroupId;
 				var allOptionsWithoutItemGroupId;
