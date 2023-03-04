@@ -4,10 +4,11 @@ HTMLWidgets.widget({
 
   type: 'output',
 
+  renderOnNullValue: true,
+
   factory: function(el, width, height) {
 
-    // TODO: define shared variables for this instance
-    var myChart = echarts.init(document.getElementById(el.id));
+    var myChart = null;
 
     return {
 
@@ -27,6 +28,15 @@ HTMLWidgets.widget({
       var reset = () => {
 
         console.log("reset() executed");
+
+        if(myChart === null){
+          console.log("init");
+          myChart = echarts.init(document.getElementById(el.id));
+        } else {
+          console.log("dispose + init");
+          myChart.dispose(document.getElementById(el.id));
+          myChart = echarts.init(document.getElementById(el.id));
+        }
 
         allDataGroups = x.data;
         extraOptions = x.options;
@@ -137,11 +147,17 @@ HTMLWidgets.widget({
       });
 
       var goForward = (dataGroupId) => {
+        console.log(dataGroupId);
         dataGroupIdStack.push(myChart.getOption().series[0].dataGroupId); // push current dataGroupId into stack.
-        myChart.setOption(allOptionsWithoutItemGroupId[dataGroupId], false);
-        myChart.setOption(allOptionsWithItemGroupId[dataGroupId], false); // setOption twice? Yeah, it is dirty.
+        console.log(dataGroupIdStack);
+        console.log(myChart.getOption().series[0]);
+        myChart.setOption(allOptionsWithoutItemGroupId[dataGroupId], { replaceMerge: 'series' });
+        console.log('allOptionsWithoutItemGroupId set');
+        myChart.setOption(allOptionsWithItemGroupId[dataGroupId], { replaceMerge: 'series' }); // setOption twice? Yeah, it is dirty.
+        console.log('allOptionsWithItemGroupId set');
         if (HTMLWidgets.shinyMode){
           Shiny.setInputValue(x.reactiveID, dataGroupId);
+          console.log('Shinyreactive datagroupId set');
         }
       };
 
