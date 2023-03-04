@@ -7,53 +7,56 @@ HTMLWidgets.widget({
   factory: function(el, width, height) {
 
     // TODO: define shared variables for this instance
-    var myChart = null;
-    var option = null;
-    var initialized = false;
+    var myChart = echarts.init(document.getElementById(el.id));
 
     return {
 
       renderValue: function(x) {
 
+      var option;
+      var allDataGroups;
+      var allDataGroupsCOPY;
+      var dataGroupIdStack;
+      var allOptionsWithItemGroupId;
+      var allOptionsWithoutItemGroupId;
+      var extraOptions;
+      var xAxis;
+      var yAxis;
+      var encode;
 
-        if (!initialized) {
-          initialized = true;
-          // Code to set up event listeners and anything else that needs to run just once
+      var reset = () => {
 
-          myChart = echarts.init(document.getElementById(el.id));
-
-        } // end of initialization procedure
-
-        const allDataGroups = null;
-        const extraOptions = null;
+        console.log("reset() executed");
 
         allDataGroups = x.data;
         extraOptions = x.options;
 
-          var xAxis = {type: 'category'};
-          var yAxis = {};
-          var encode = {
-            x: 0,
-            y: 1,
+        xAxis = {type: 'category'};
+        yAxis = {};
+        encode = {
+          x: 0,
+          y: 1,
+        };
+        if(x.flip === "TRUE"){
+          xAxis = {};
+          yAxis = {type: 'category'};
+          encode = {
+            x: 1,
+            y: 0,
           };
+        }
 
-          if(x.flip === "TRUE"){
-            xAxis = {};
-            yAxis = {type: 'category'};
-            encode = {
-              x: 1,
-              y: 0,
-            };
-          }
+        // A stack to remember previous dataGroupsId
+        dataGroupIdStack = [];
 
-        // Generate 1+1 options for each data
-      const allOptionsWithItemGroupId = {};
-      const allOptionsWithoutItemGroupId = {};
+                // Generate 1+1 options for each data
+        allOptionsWithItemGroupId = {};
+        allOptionsWithoutItemGroupId = {};
 
-      allDataGroups.forEach((dataGroup, index) => {
-        const { dataGroupId, data } = dataGroup;
+        allDataGroups.forEach((dataGroup, index) => {
+        var { dataGroupId, data } = dataGroup;
 
-        const baseOptions = {
+        var baseOptions = {
             xAxis: xAxis,
             yAxis: yAxis,
             graphic: [
@@ -73,7 +76,7 @@ HTMLWidgets.widget({
             animationDurationUpdate: 500,
           }
 
-        const title = {
+        var title = {
             title: {
               text: dataGroupId,
               left: "center",
@@ -88,7 +91,7 @@ HTMLWidgets.widget({
           title.title.text = "";
         }
 
-        const optionWithItemGroupId = {
+        var optionWithItemGroupId = {
           ...baseOptions,
           ...title,
           series: {
@@ -108,7 +111,7 @@ HTMLWidgets.widget({
           ...extraOptions
         };
 
-        const optionWithoutItemGroupId = {
+        var optionWithoutItemGroupId = {
           ...baseOptions,
           ...title,
           series: {
@@ -133,10 +136,7 @@ HTMLWidgets.widget({
         allOptionsWithoutItemGroupId[dataGroupId] = optionWithoutItemGroupId;
       });
 
-      // A stack to remember previous dataGroupsId
-      const dataGroupIdStack = [];
-
-      const goForward = (dataGroupId) => {
+      var goForward = (dataGroupId) => {
         dataGroupIdStack.push(myChart.getOption().series[0].dataGroupId); // push current dataGroupId into stack.
         myChart.setOption(allOptionsWithoutItemGroupId[dataGroupId], false);
         myChart.setOption(allOptionsWithItemGroupId[dataGroupId], false); // setOption twice? Yeah, it is dirty.
@@ -145,7 +145,7 @@ HTMLWidgets.widget({
         }
       };
 
-      const goBack = () => {
+      var goBack = () => {
         if (dataGroupIdStack.length === 0) {
           console.log('Already in root dataGroup!');
         } else {
@@ -153,22 +153,27 @@ HTMLWidgets.widget({
           if (HTMLWidgets.shinyMode){
             Shiny.setInputValue(x.reactiveID, dataGroupIdStack.slice(-1)[0]);
           }
-          myChart.setOption(allOptionsWithoutItemGroupId[myChart.getOption().series[0].dataGroupId],false);
+          myChart.setOption(allOptionsWithoutItemGroupId[myChart.getOption().series[0].dataGroupId], false);
           myChart.setOption(allOptionsWithItemGroupId[dataGroupIdStack.pop()], true); // Note: the parameter notMerge is set true
         }
       };
 
-      option = allOptionsWithItemGroupId['']; // The initial option is the root data option
-
       myChart.on('click', 'series.bar', (params) => {
         if (params.data[2]) {
           // If current params is not belong to the "childest" data, then it has data[2]
-          const dataGroupId = params.data[2];
+          var dataGroupId = params.data[2];
           goForward(dataGroupId);
         }
       });
 
-        option && myChart.setOption(option);
+        option = allOptionsWithItemGroupId['']; // The initial option is the root data option
+
+        myChart.clear();
+        option && myChart.setOption(option, {notMerge: true});
+
+      }
+
+      reset();
 
       },
 
