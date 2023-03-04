@@ -7,28 +7,34 @@ HTMLWidgets.widget({
   factory: function(el, width, height) {
 
     // TODO: define shared variables for this instance
-    var chartDom = document.getElementById(el.id);
-    var myChart = echarts.init(chartDom);
-    var option;
+    var myChart = null;
+    var option = null;
     var initialized = false;
 
     return {
 
       renderValue: function(x) {
 
+
         if (!initialized) {
           initialized = true;
           // Code to set up event listeners and anything else that needs to run just once
 
-          const allDataGroups = x.data
-          const extraOptions = x.options
+          myChart = echarts.init(document.getElementById(el.id));
+
+        } // end of initialization procedure
+
+        const allDataGroups = null;
+        const extraOptions = null;
+
+        allDataGroups = x.data;
+        extraOptions = x.options;
 
           var xAxis = {type: 'category'};
           var yAxis = {};
           var encode = {
             x: 0,
             y: 1,
-            itemGroupId: 2
           };
 
           if(x.flip === "TRUE"){
@@ -37,11 +43,17 @@ HTMLWidgets.widget({
             encode = {
               x: 1,
               y: 0,
-              itemGroupId: 2
             };
           }
 
-          const baseOptions = {
+        // Generate 1+1 options for each data
+      const allOptionsWithItemGroupId = {};
+      const allOptionsWithoutItemGroupId = {};
+
+      allDataGroups.forEach((dataGroup, index) => {
+        const { dataGroupId, data } = dataGroup;
+
+        const baseOptions = {
             xAxis: xAxis,
             yAxis: yAxis,
             graphic: [
@@ -58,15 +70,8 @@ HTMLWidgets.widget({
                 }
               }
             ],
-            animationDurationUpdate: 1000
-          };
-
-        // Generate 1+1 options for each data
-      const allOptionsWithItemGroupId = {};
-      const allOptionsWithoutItemGroupId = {};
-
-      allDataGroups.forEach((dataGroup, index) => {
-        const { dataGroupId, data } = dataGroup;
+            animationDurationUpdate: 500,
+          }
 
         const title = {
             title: {
@@ -90,7 +95,10 @@ HTMLWidgets.widget({
             type: 'bar',
             // id: "sales",
             dataGroupId: dataGroupId,
-            encode: encode,
+            encode: {
+              ...encode,
+              itemGroupId: 2
+            },
             data: data,
             universalTransition: {
               enabled: true,
@@ -107,13 +115,18 @@ HTMLWidgets.widget({
             type: 'bar',
             // id: "sales",
             dataGroupId: dataGroupId,
-            encode: encode,
-            data: data,
+            encode: {
+              ...encode,
+              // itemGroupId: 2,
+            },
+            data: data.map((item, index) => {
+              return item.slice(0, 2); // This is what "without itemGroupId" means
+            }),
             universalTransition: {
-              enabled: true,
-              divideShape: 'clone'
+            enabled: true,
+            divideShape: 'clone'
             }
-          },
+        },
           ...extraOptions
         };
         allOptionsWithItemGroupId[dataGroupId] = optionWithItemGroupId;
@@ -155,11 +168,8 @@ HTMLWidgets.widget({
         }
       });
 
-        } // end of initialization procedure
-
         option && myChart.setOption(option);
 
-        myChart
       },
 
       resize: function(width, height) {
