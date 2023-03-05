@@ -71,7 +71,6 @@ ddbarModuleServer <- function(id, type = 1) {
 
       observeEvent(input$ddbar,{
         params$filterVector <- unlist(strsplit(input$ddbar, split="\\|"))
-        print(params$filterVector)
       })
 
       output$table = DT::renderDataTable({
