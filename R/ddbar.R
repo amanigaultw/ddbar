@@ -38,7 +38,7 @@
 ddbar <- function(data, options = NULL, horizontal = F, showTitle = T, reactiveID = NULL, width = NULL, height = NULL, elementId = NULL) {
 
   if(is.null(options)){
-    options <- list(animationDurationUpdate = 1000)
+    options <- list(animationDurationUpdate = 500)
   }
 
   if(is.null(reactiveID)){
