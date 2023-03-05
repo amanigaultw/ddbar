@@ -24,8 +24,6 @@ devtools::install_github("amanigaultw/ddbar")
 Illustrating how ddbar could be used within a Shiny app.
 
 ``` r
-library(ddbar)
-
 ddbar::runExample()
 ```
 
