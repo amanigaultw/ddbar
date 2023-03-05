@@ -7,7 +7,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
- Multilevel Bar Chart Drilldown derived from Apache Echart brought to R via htmlWidget
+ Multilevel Drilldown Bar Chart for R
 
 ## Installation
 
