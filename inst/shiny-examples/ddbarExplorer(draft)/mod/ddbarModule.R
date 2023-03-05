@@ -22,7 +22,8 @@ ddbarModuleServer <- function(id, type = 1) {
     function(input, output, session) {
 
       params <- reactiveValues(order = colnames(rawdata),
-                               data = rawdata)
+                               data = rawdata,
+                               filterVector = NA)
 
       observeEvent(input$show, {
         showModal(modalDialog(
@@ -58,6 +59,7 @@ ddbarModuleServer <- function(id, type = 1) {
         id <- params$order %in% input$neworder
         params$order <- c(input$neworder, params$order[!id])
         params$data <- params$data[,params$order]
+        params$filterVector <- NA
       })
 
       output$ddbarPlot <- renderDdbar({
@@ -67,14 +69,17 @@ ddbarModuleServer <- function(id, type = 1) {
                 reactiveID = session$ns("ddbar"))
       })
 
-      filteredData <- eventReactive(input$ddbar, {
-        filterVector <- unlist(strsplit(input$ddbar, split="\\|"))
-        applyFilterVector(params$data, filterVector)
+      observeEvent(input$ddbar,{
+        params$filterVector <- unlist(strsplit(input$ddbar, split="\\|"))
+        print(params$filterVector)
       })
 
       output$table = DT::renderDataTable({
-        data <- params$data
-        if(!is.null(input$ddbar)) data <- filteredData()
+        if(length(params$filterVector) == 1 && is.na(params$filterVector)){
+          data <- params$data
+        } else {
+          data <- applyFilterVector(params$data, params$filterVector)
+        }
         DT::datatable(data, options = list(lengthMenu = c(5, 30, 50), pageLength = 5))
       })
 
@@ -98,29 +103,29 @@ applyFilterVector <- function(data, filterVector){
   data
 }
 
-# # example data
-# #example data (categorical outcome)
-# rawdata <- data.frame(nationality = sample(c("French", "German", "British"), 1000, replace=TRUE, prob=c(0.4, 0.3, 0.3)),
-#                       sex = sample(c("Male", "Female"), 1000, replace=TRUE, prob=c(0.5, 0.5)),
-#                       age = sample(c("child", "adult", "older adult"), 1000, replace=TRUE, prob=c(0.1, 0.7, 0.2)),
-#                       politics = sample(c("left", "center", "right"), 1000, replace=TRUE, prob=c(0.3, 0.4, 0.3)))
-#
-# #pass in some example options
-# options <- list(
-#   tooltip = list(
-#     trigger = 'axis',
-#     axisPointer = list(
-#       type = 'shadow'
-#     )
-#   )
-# )
-#
-# ui <- fluidPage(
-#   ddbarModuleUI("test1")
-# )
-#
-# server <- function(input, output, session) {
-#   ddbarModuleServer("test1")
-# }
-#
-# shinyApp(ui, server)
+# example data
+#example data (categorical outcome)
+rawdata <- data.frame(nationality = sample(c("French", "German", "British"), 1000, replace=TRUE, prob=c(0.4, 0.3, 0.3)),
+                      sex = sample(c("Male", "Female"), 1000, replace=TRUE, prob=c(0.5, 0.5)),
+                      age = sample(c("child", "adult", "older adult"), 1000, replace=TRUE, prob=c(0.1, 0.7, 0.2)),
+                      politics = sample(c("left", "center", "right"), 1000, replace=TRUE, prob=c(0.3, 0.4, 0.3)))
+
+#pass in some example options
+options <- list(
+  tooltip = list(
+    trigger = 'axis',
+    axisPointer = list(
+      type = 'shadow'
+    )
+  )
+)
+
+ui <- fluidPage(
+  ddbarModuleUI("test1")
+)
+
+server <- function(input, output, session) {
+  ddbarModuleServer("test1")
+}
+
+shinyApp(ui, server)
