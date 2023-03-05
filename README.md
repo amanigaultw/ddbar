@@ -19,7 +19,17 @@ You can install the development version of ddbar from
 devtools::install_github("amanigaultw/ddbar")
 ```
 
-## Example
+## Example App
+
+Illustrating how ddbar could be used within a Shiny app.
+
+``` r
+library(ddbar)
+
+ddbar::runExample()
+```
+
+## Example Usage
 
 Illustrating ddbar() using some dummy data.
 
