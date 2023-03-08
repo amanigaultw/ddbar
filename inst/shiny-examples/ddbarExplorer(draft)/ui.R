@@ -1,3 +1,0 @@
-fluidPage(
-  ddbarModuleUI("ddbarMain")
-)
