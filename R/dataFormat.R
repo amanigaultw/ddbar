@@ -3,6 +3,7 @@
 #' @param data input dataframe
 #' @param FUN aggregation function
 #' @param delimiter string delimiter for the dataGroupId
+#' @param na.action string indicating how missing data should be handled.
 #'
 #' @export
 #'
@@ -21,17 +22,32 @@
 #'
 #' formattedData2 <- dataFormat(rawdata2)
 #'
-dataFormat <- function(data, FUN = NULL, delimiter = "|"){
+dataFormat <- function(data, FUN = NULL, delimiter = "|", na.action = "omit"){
   #check input data
   if(any(is.na(data[, !sapply(data, is.numeric)]))){
-    initialRowCount <- nrow(data)
-    data <- data[rowSums(is.na(data[, !sapply(data, is.numeric)])) == 0,]
-    warning(paste(initialRowCount - nrow(data), "rows were dropped due to missing values."))
+    data <- handleMissingData(data, na.action)
   }
-  stopifnot("Too much missing data to generate a valid drill down plot" = nrow(data) > 0)
   #reformat data
   dataList <- getDataList(data)
   lapply(dataList[!unlist(lapply(dataList, isTerminal))], toeChartListFormat, FUN, delimiter)
+}
+
+handleMissingData <- function(data, na.action){
+
+  if(na.action == "omit"){
+    initialRowCount <- nrow(data)
+    data <- data[rowSums(is.na(data[, !sapply(data, is.numeric)])) == 0,]
+    stopifnot("Too much missing data to generate a valid drill down plot" = nrow(data) > 0)
+    warning(paste(initialRowCount - nrow(data), "rows were dropped due to missing values."))
+  }
+
+  if(na.action == "label"){
+    for(i in seq_along(data[, !sapply(data, is.numeric)])){
+      data[, !sapply(data, is.numeric)][,i][is.na(data[, !sapply(data, is.numeric)][,i])] <- paste0(names(data[, !sapply(data, is.numeric)][i]), ": missing")
+    }
+  }
+
+  return(data)
 }
 
 firstNonUniqueCol <- function(data){
@@ -81,6 +97,9 @@ toeChartListFormat <- function(data, FUN, delimiter){
     for(i in seq_along(namedValueVector)) dataFormatted[[i]] <- unname(c(names(namedValueVector[i]), namedValueVector[i], names(namedValueVector[i])))
   }else{
     for(i in seq_along(namedValueVector)) dataFormatted[[i]] <- unname(c(names(namedValueVector[i]), namedValueVector[i], paste0(c(dataGroupId, names(namedValueVector[i])), collapse = delimiter)))
+  }
+  for(i in seq_along(dataFormatted)){
+    if(isTerminal(data[data[,firstNonUniqueCol(data)] == dataFormatted[[i]][1],])) dataFormatted[[i]] <- dataFormatted[[i]][1:2]
   }
   list(dataGroupId = dataGroupId,
        data = dataFormatted)

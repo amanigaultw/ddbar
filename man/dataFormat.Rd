@@ -4,7 +4,7 @@
 \alias{dataFormat}
 \title{Format a given dataframe for use by ddbar}
 \usage{
-dataFormat(data, FUN = NULL, delimiter = "|")
+dataFormat(data, FUN = NULL, delimiter = "|", na.action = "omit")
 }
 \arguments{
 \item{data}{input dataframe}
@@ -12,6 +12,8 @@ dataFormat(data, FUN = NULL, delimiter = "|")
 \item{FUN}{aggregation function}
 
 \item{delimiter}{string delimiter for the dataGroupId}
+
+\item{na.action}{string indicating how missing data should be handled.}
 }
 \description{
 Format a given dataframe for use by ddbar
