@@ -3,7 +3,7 @@
 #' @param data input dataframe
 #' @param FUN aggregation function
 #' @param delimiter string delimiter for the dataGroupId
-#' @param na.action string indicating how missing data should be handled.
+#' @param na.action string indicating how missing data should be handled. "omit" or "label" options may be used.
 #'
 #' @export
 #'

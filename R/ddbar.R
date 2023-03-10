@@ -1,4 +1,4 @@
-#' Drill Down Bar Apache echarts Widget
+#' Multilevel Drill Down Bar Widget
 #'
 #' @param data data list object to be plotted; typically generated using \code{dataFormat()}.
 #' @param width width of the graph as CSS units.
