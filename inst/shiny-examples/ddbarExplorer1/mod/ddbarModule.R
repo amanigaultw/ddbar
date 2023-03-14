@@ -21,7 +21,7 @@ ddbarModuleServer <- function(id, data, filterVars = NULL) {
       if(is.null(filterVars)) filterVars <- colnames(data)
 
       params <- reactiveValues(fullData = data,
-                               order = filterVars,
+                               filterVars = filterVars,
                                plotData = data[,filterVars],
                                filterVector = NA)
 
@@ -64,19 +64,19 @@ ddbarModuleServer <- function(id, data, filterVars = NULL) {
       output$selection <- renderUI({
         selectizeInput(session$ns('neworder'),
                        'Select new order',
-                       choices = params$order,
+                       choices = params$filterVars,
                        multiple = TRUE)
       })
 
       output$theorder <- renderTable(
-        params$order,
+        params$filterVars,
         colnames = F
       )
 
       observeEvent(input$update,{
-        id <- params$order %in% input$neworder
-        params$order <- c(input$neworder, params$order[!id])
-        params$plotData <- params$plotData[,params$order]
+        id <- params$filterVars %in% input$neworder
+        params$filterVars <- c(input$neworder, params$filterVars[!id])
+        params$plotData <- params$plotData[,params$filterVars]
         params$filterVector <- NA
       })
 
@@ -98,7 +98,7 @@ ddbarModuleServer <- function(id, data, filterVars = NULL) {
         } else {
           data <- applyFilterVector(params$plotData, params$filterVector)
         }
-        data <- merge(data, params$fullData[ , !(names(params$fullData) %in% params$order)], by = 0)[,-1]
+        data <- merge(data, params$fullData[ , !(names(params$fullData) %in% params$filterVars)], by = 0)[,-1]
         return(data)
       })
 
