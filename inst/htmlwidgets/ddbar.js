@@ -171,7 +171,7 @@ HTMLWidgets.widget({
                         var dataGroupId = params.data[2];
                         goForward(dataGroupId);
                     } else {
-                      if (HTMLWidgets.shinyMode) {
+                      if (x.showTitle === "FALSE" && HTMLWidgets.shinyMode) {
                             Shiny.setInputValue(x.reactiveID, myChart.getOption().series[0].dataGroupId + x.delimiter + params.data[0]);
                       }
                     }
