@@ -171,9 +171,24 @@ HTMLWidgets.widget({
                         var dataGroupId = params.data[2];
                         goForward(dataGroupId);
                     } else {
-                      if (x.showTitle === "FALSE" && HTMLWidgets.shinyMode) {
-                            Shiny.setInputValue(x.reactiveID, myChart.getOption().series[0].dataGroupId + x.delimiter + params.data[0]);
-                      }
+                        if (HTMLWidgets.shinyMode) {
+                            // update shinyinput and title when "childest" data is clicked
+                            var tempDataGroupId = myChart.getOption().series[0].dataGroupId + x.delimiter + params.data[0];
+                            Shiny.setInputValue(x.reactiveID, tempDataGroupId);
+
+                            if (x.showTitle === "TRUE") {
+                                var tempOptions = myChart.getOption();
+                                tempOptions.title = {
+                                    text: tempDataGroupId,
+                                    left: "center",
+                                    top: "bottom",
+                                    textStyle: {
+                                        fontSize: 20
+                                    }
+                                };
+                                myChart.setOption(tempOptions, false);
+                            }
+                        }
                     }
                 });
 
