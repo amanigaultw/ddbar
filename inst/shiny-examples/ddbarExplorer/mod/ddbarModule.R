@@ -86,45 +86,12 @@ ddbarModuleServer <- function(id, data, filterVars = NULL) {
   )
 }
 
-
-# library(shiny)
-# library(ddbar)
-# library(htmlwidgets)
-# library(DT)
-# library(shinyjs)
-#
-# applyFilterVector <- function(data, filterVector){
-#   if(!is.null(filterVector) && length(filterVector) > 0){
-#     for(i in seq_along(filterVector)){
-#       data <- data[data[,i] == filterVector[i], ]
-#     }
-#   }
-#   data
-# }
-#
-# # example data
-# #example data (categorical outcome)
-# rawdata <- data.frame(nationality = sample(c("French", "German", "British"), 1000, replace=TRUE, prob=c(0.4, 0.3, 0.3)),
-#                       sex = sample(c("Male", "Female"), 1000, replace=TRUE, prob=c(0.5, 0.5)),
-#                       age = sample(c("child", "adult", "older adult"), 1000, replace=TRUE, prob=c(0.1, 0.7, 0.2)),
-#                       politics = sample(c("left", "center", "right"), 1000, replace=TRUE, prob=c(0.3, 0.4, 0.3)))
-#
-# #pass in some example options
-# options <- list(
-#   tooltip = list(
-#     trigger = 'axis',
-#     axisPointer = list(
-#       type = 'shadow'
-#     )
-#   )
-# )
-#
-# ui <- fluidPage(
-#   ddbarModuleUI("test1")
-# )
-#
-# server <- function(input, output, session) {
-#   ddbarModuleServer("test1")
-# }
-#
-# shinyApp(ui, server)
+#helper function
+applyFilterVector <- function(data, filterVector){
+  if(!is.null(filterVector) && length(filterVector) > 0){
+    for(i in seq_along(filterVector)){
+      data <- data[data[,i] == filterVector[i], ]
+    }
+  }
+  data
+}

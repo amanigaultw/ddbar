@@ -4,10 +4,6 @@ library(htmlwidgets)
 library(DT)
 library(shinyjs)
 
-#load helper functions
-files = list.files(path = "R/", pattern = "*.R")
-if(length(files) > 0) sapply(paste0("R/", files), source, .GlobalEnv)
-
 #load modules
 files = list.files(path = "mod/", pattern = "*.R")
 if(length(files) > 0) sapply(paste0("mod/", files), source, .GlobalEnv)
