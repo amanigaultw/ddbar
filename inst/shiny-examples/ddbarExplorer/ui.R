@@ -1,3 +1,4 @@
 fluidPage(
-  ddbarModuleUI("ddbarMain")
+  ddbarModuleUI("ddbarMain"),
+  DT::dataTableOutput('table')
 )

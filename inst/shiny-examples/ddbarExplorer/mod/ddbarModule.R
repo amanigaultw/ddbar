@@ -7,22 +7,22 @@ ddbarModuleUI <- function(id) {
 
     actionButton(ns("show"), "Reorder variables"),
 
-    ddbarOutput(ns('ddbarPlot')),
-
-    DT::dataTableOutput(ns('table'))
+    ddbarOutput(ns('ddbarPlot'))
   )
 
 }
 
 # Module server function
-ddbarModuleServer <- function(id, type = 1) {
+ddbarModuleServer <- function(id, data, filterVars = NULL) {
   moduleServer(
     id,
 
     function(input, output, session) {
 
-      params <- reactiveValues(order = colnames(rawdata),
-                               data = rawdata,
+      if(is.null(filterVars)) filterVars <- colnames(data)
+
+      params <- reactiveValues(data = data,
+                               filterVars = filterVars,
                                filterVector = NA)
 
       observeEvent(input$show, {
@@ -46,19 +46,19 @@ ddbarModuleServer <- function(id, type = 1) {
       output$selection <- renderUI({
         selectizeInput(session$ns('neworder'),
                        'Select new order',
-                       choices = params$order,
+                       choices = params$filterVars,
                        multiple = TRUE)
       })
 
       output$theorder <- renderTable(
-        params$order,
+        params$filterVars,
         colnames = F
       )
 
       observeEvent(input$update,{
-        id <- params$order %in% input$neworder
-        params$order <- c(input$neworder, params$order[!id])
-        params$data <- params$data[,params$order]
+        id <- params$filterVars %in% input$neworder
+        params$filterVars <- c(input$neworder, params$filterVars[!id])
+        params$data <- params$data[,params$filterVars]
         params$filterVector <- NA
       })
 
@@ -73,15 +73,15 @@ ddbarModuleServer <- function(id, type = 1) {
         params$filterVector <- unlist(strsplit(input$ddbar, split="\\|"))
       })
 
-      output$table = DT::renderDataTable({
+      filteredData <- reactive({
         if(length(params$filterVector) == 1 && is.na(params$filterVector)){
           data <- params$data
         } else {
           data <- applyFilterVector(params$data, params$filterVector)
         }
-        DT::datatable(data, options = list(lengthMenu = c(5, 30, 50), pageLength = 5))
       })
 
+      return(filteredData)
     }
   )
 }
