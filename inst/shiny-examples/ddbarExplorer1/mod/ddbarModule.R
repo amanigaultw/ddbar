@@ -4,45 +4,25 @@ ddbarModuleUI <- function(id) {
   ns <- NS(id)
 
   tagList(
-
-    grid(
-      grid_template = grid_template(
-        default = list(
-          areas = rbind(
-            c("ddbar", "hist1", "hist2"),
-            c("DT", "DT", "DT")
-          ),
-          cols_width = c("1fr", "1fr", "1fr"),
-          rows_height = c("1fr", "1fr")
-        )
-      ),
-      area_styles = list(ddbar = "margin: 10px;",
-                         DT = "margin: 10px;",
-                         hist1 = "margin: 10px;",
-                         hist2 = "margin: 10px;"),
-      ddbar = div(ddbarOutput(ns('ddbarPlot')),
-                  actionButton(ns("show"), "Reorder variables")),
-      DT =  DT::dataTableOutput(ns('table')),
-      hist1 = echarts4rOutput(ns('hist1')),
-      hist2 = echarts4rOutput(ns('hist2'))
-    ),
-
+    div(ddbarOutput(ns('ddbarPlot')),
+        actionButton(ns("show"), "Reorder variables")),
     uiOutput(ns("modalAction"))
-
   )
 
 }
 
 # Module server function
-ddbarModuleServer <- function(id) {
+ddbarModuleServer <- function(id, data, filterVars = NULL) {
   moduleServer(
     id,
 
     function(input, output, session) {
 
-      params <- reactiveValues(fullData = rawdata,
-                               order = c("nationality", "sex", "age", "politics"),
-                               plotData = rawdata[,c("nationality", "sex", "age", "politics")],
+      if(is.null(filterVars)) filterVars <- colnames(data)
+
+      params <- reactiveValues(fullData = data,
+                               order = filterVars,
+                               plotData = data[,filterVars],
                                filterVector = NA)
 
 
@@ -112,7 +92,7 @@ ddbarModuleServer <- function(id) {
         params$filterVector <- unlist(strsplit(input$ddbar, split="\\|"))
       })
 
-      tabledata <- reactive({
+      filteredData <- reactive({
         if(length(params$filterVector) == 1 && is.na(params$filterVector)){
           data <- params$plotData
         } else {
@@ -122,27 +102,7 @@ ddbarModuleServer <- function(id) {
         return(data)
       })
 
-      output$table = DT::renderDataTable({
-        DT::datatable(tabledata(), options = list(lengthMenu = c(5, 30, 50), pageLength = 5))
-      })
-
-      output$hist1 <- renderEcharts4r({
-        tabledata() |>
-          e_charts() |>
-          e_histogram(x1, name = "histogram") |>
-          e_tooltip(trigger = "axis") |>
-          e_title("x1", left = "center") |>
-          e_legend(F)
-      })
-      output$hist2 <- renderEcharts4r({
-        tabledata() |>
-          e_charts() |>
-          e_histogram(x2, name = "histogram") |>
-          e_tooltip(trigger = "axis") |>
-          e_title("x2", left = "center") |>
-          e_legend(F)
-      })
-
+      return(filteredData)
     }
   )
 }
