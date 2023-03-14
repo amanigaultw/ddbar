@@ -170,6 +170,10 @@ HTMLWidgets.widget({
                         // If current params is not belong to the "childest" data, then it has data[2]
                         var dataGroupId = params.data[2];
                         goForward(dataGroupId);
+                    } else {
+                      if (HTMLWidgets.shinyMode) {
+                            Shiny.setInputValue(x.reactiveID, myChart.getOption().series[0].dataGroupId + x.delimiter + params.data[0]);
+                      }
                     }
                 });
 

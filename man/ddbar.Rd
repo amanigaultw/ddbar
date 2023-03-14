@@ -2,7 +2,7 @@
 % Please edit documentation in R/ddbar.R
 \name{ddbar}
 \alias{ddbar}
-\title{Drill Down Bar Apache echarts Widget}
+\title{Multilevel Drill Down Bar Widget}
 \usage{
 ddbar(
   data,
@@ -10,6 +10,7 @@ ddbar(
   horizontal = F,
   showTitle = T,
   reactiveID = NULL,
+  delimiter = "|",
   width = NULL,
   height = NULL,
   elementId = NULL
@@ -26,6 +27,8 @@ ddbar(
 
 \item{reactiveID}{string id to be passed to \code{Shiny.setInputValue()} called within ddbar.js}
 
+\item{delimiter}{string delimiter for the dataGroupId; must match the delimiter used by \code{dataFormat()}.}
+
 \item{width}{width of the graph as CSS units.}
 
 \item{height}{height of the graph as CSS units.}
@@ -33,7 +36,7 @@ ddbar(
 \item{elementId}{html element id.}
 }
 \description{
-Drill Down Bar Apache echarts Widget
+Multilevel Drill Down Bar Widget
 }
 \examples{
 

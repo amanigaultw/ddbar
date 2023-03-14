@@ -8,6 +8,7 @@
 #' @param horizontal bool indicating whether the bar plot should be horizontal
 #' @param showTitle bool indicating whether to display a dynamic title
 #' @param reactiveID string id to be passed to \code{Shiny.setInputValue()} called within ddbar.js
+#' @param delimiter string delimiter for the dataGroupId; must match the delimiter used by \code{dataFormat()}.
 #'
 #' @import htmlwidgets
 #'
@@ -35,7 +36,7 @@
 #'   ddbar(options)
 #'
 #' @export
-ddbar <- function(data, options = NULL, horizontal = F, showTitle = T, reactiveID = NULL, width = NULL, height = NULL, elementId = NULL) {
+ddbar <- function(data, options = NULL, horizontal = F, showTitle = T, reactiveID = NULL, delimiter = "|", width = NULL, height = NULL, elementId = NULL) {
 
   if(is.null(options)){
     options <- list(animationDurationUpdate = 500)
@@ -51,7 +52,8 @@ ddbar <- function(data, options = NULL, horizontal = F, showTitle = T, reactiveI
     options = options,
     flip = as.character(horizontal),
     showTitle = as.character(showTitle),
-    reactiveID = reactiveID
+    reactiveID = reactiveID,
+    delimiter = "|"
   )
 
   # create widget

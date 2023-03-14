@@ -13,7 +13,7 @@ dataFormat(data, FUN = NULL, delimiter = "|", na.action = "omit")
 
 \item{delimiter}{string delimiter for the dataGroupId}
 
-\item{na.action}{string indicating how missing data should be handled.}
+\item{na.action}{string indicating how missing data should be handled. "omit" or "label" options may be used.}
 }
 \description{
 Format a given dataframe for use by ddbar
