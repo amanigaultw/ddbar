@@ -3,6 +3,7 @@
 export(dataFormat)
 export(ddbar)
 export(ddbarOutput)
+export(handleMissingData)
 export(renderDdbar)
 export(runExample)
 export(runExample1)

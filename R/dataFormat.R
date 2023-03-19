@@ -31,7 +31,11 @@ dataFormat <- function(data, FUN = NULL, delimiter = "|", na.action = "omit"){
   dataList <- getDataList(data)
   lapply(dataList[!unlist(lapply(dataList, isTerminal))], toeChartListFormat, FUN, delimiter)
 }
-
+#' Handles missing values in the input dataframe
+#'
+#' @inheritParams dataFormat
+#'
+#' @export
 handleMissingData <- function(data, na.action){
 
   if(na.action == "omit"){
