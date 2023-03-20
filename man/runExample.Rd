@@ -4,7 +4,10 @@
 \alias{runExample}
 \title{Run example app featuring ddbar() as a data selection tool}
 \usage{
-runExample()
+runExample(example = "ddbarExplorer")
+}
+\arguments{
+\item{example}{shiny app name}
 }
 \description{
 Run example app featuring ddbar() as a data selection tool

@@ -25,10 +25,10 @@ Illustrating how ddbar could be used within a Shiny app.
 
 ``` r
 #simple example
-ddbar::runExample()
+ddbar::runExample("ddbarExplorer")
 
 #prettier example
-ddbar::runExample1()
+ddbar::runExample("ddbarExplorer1")
 ```
 
 ## Example Usage
