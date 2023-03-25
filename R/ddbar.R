@@ -32,7 +32,7 @@
 #' )
 #'
 #' rawdata |>
-#'   dataFormat(mean) |>
+#'   dataFormat(mean, mode = "vector") |>
 #'   ddbar(options)
 #'
 #' @export

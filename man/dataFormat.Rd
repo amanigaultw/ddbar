@@ -4,12 +4,26 @@
 \alias{dataFormat}
 \title{Format a given dataframe for use by ddbar}
 \usage{
-dataFormat(data, FUN = NULL, delimiter = "|", na.action = "omit")
+dataFormat(
+  data,
+  FUN = NULL,
+  mode = "count",
+  filterVars = NULL,
+  delimiter = "|",
+  na.action = "omit"
+)
 }
 \arguments{
 \item{data}{input dataframe}
 
-\item{FUN}{aggregation function}
+\item{FUN}{aggregation function; must return a single numeric value.
+When \code{aggMode = "count"}, may remain null;
+When \code{aggMode = "vector"}, will take the last column of \code{data} as input;
+When \code{aggMode = "dataframe"}, will take \code{data} as input;}
+
+\item{mode}{aggregation mode. "count", "vector" or "dataframe" options may be used.}
+
+\item{filterVars}{a character vector of column names to be used as filter variables.}
 
 \item{delimiter}{string delimiter for the dataGroupId}
 
@@ -26,11 +40,21 @@ rawdata <- data.frame(nationality = sample(c("French", "German", "British"),
                       age = sample(c("child", "adult", "older adult"),
                       100, replace=TRUE, prob=c(0.1, 0.7, 0.2)))
 
-formattedData <- dataFormat(rawdata)
+filterVars <- c("nationality", "sex", "age")
+
+formattedData1 <- dataFormat(rawdata)
 
 rawdata2 <- data.frame(rawdata,
+                       x1 = rnorm(100),
+                       x2 = rnorm(100),
                        IQ = round(rnorm(100, mean = 100, sd = 10), 0))
 
-formattedData2 <- dataFormat(rawdata2)
+formattedData2 <- dataFormat(rawdata2, mean,
+                             mode = "vector", filterVars = filterVars)
+
+getMeanDiffx1x2 <- function(dataframe) mean(dataframe$x1 - dataframe$x2, na.rm = TRUE)
+
+formattedData3 <- dataFormat(rawdata2, getMeanDiffx1x2,
+                             mode = "dataframe", filterVars = filterVars)
 
 }

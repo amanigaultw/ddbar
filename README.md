@@ -52,7 +52,7 @@ options <- list(
     trigger = 'axis',
     axisPointer = list(
       type = 'shadow'
-      )
+    )
   )
 )
 
@@ -74,12 +74,24 @@ rawdata <- data.frame(nationality = sample(c("French", "German", "British"), 100
 
 #generate bar plot (aggregation via mean)
 rawdata |> 
-  dataFormat(mean) |>
+  dataFormat(mean, mode = "vector") |>
   ddbar()
 
 #generate bar plot (aggregation via median)  
 rawdata |> 
-  dataFormat(median) |>
+  dataFormat(median, mode = "vector") |>
   ddbar()
 
+#example of dataframe level aggregation 
+rawdata3 <- data.frame(rawdata,
+                       x1 = rnorm(100),
+                       x2 = rnorm(100))
+
+getMeanDiffx1x2 <- function(dataframe) mean(dataframe$x1 - dataframe$x2, na.rm = TRUE)
+
+rawdata3 |>
+  dataFormat(getMeanDiffx1x2, 
+             mode = "dataframe", 
+             filterVars = names(rawdata)) |>
+  ddbar()
 ```
