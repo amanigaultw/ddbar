@@ -9,7 +9,7 @@
 
  Multilevel Drilldown Bar Chart for R
  
-## Try out the functionality
+## Try It
 
 You can preview the functionality provided by ddbar here:
 [Sample App](https://andrewmanigaultw.shinyapps.io/ddbarExplorer1/)
