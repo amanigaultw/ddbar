@@ -1,7 +1,9 @@
 ui <- function() {
   shinyUI(
     semanticPage(
-
+       titlePanel("Welcome the ddbar Demo Application!"),
+  h4("The ddbar package allows you to quickly explore group composition while applying filters. Click within the leftmost bargraph below to get started."),
+  hr(),
       grid(
         grid_template = grid_template(
           default = list(
